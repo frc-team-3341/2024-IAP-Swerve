@@ -176,12 +176,12 @@ public class SwerveModuleIOCANCoder implements SwerveModuleIO {
         this.state = state;
 
     }
-
+    
     public SwerveModuleState getDesiredState() {
         // Returns module state
         return this.state;
     }
-
+    
     public SwerveModuleState getActualModuleState() {
         double velocity = this.driveEncoder.getVelocity();
         double rotation = this.getTurnPositionInRad();
