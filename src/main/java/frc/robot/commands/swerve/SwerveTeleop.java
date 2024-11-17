@@ -9,6 +9,8 @@ import frc.util.lib.AsymmetricLimiter;
 import frc.util.lib.ArcadeJoystickUtil;
 import frc.robot.Robot;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
@@ -16,15 +18,16 @@ import java.util.function.DoubleSupplier;
 public class SwerveTeleop extends Command {
    // Initialize empty swerve object
    private SwerveDrive swerve;
+   private final Joystick joystick;
 
    // Create suppliers as object references
-   private DoubleSupplier inputX;
-   private DoubleSupplier inputY;
-   private DoubleSupplier x;
-   private DoubleSupplier y;
-   private DoubleSupplier rotationSup;
-   private BooleanSupplier robotCentricSup;
-   private DoubleSupplier translationRightTrigger;
+   private Double inputX;
+   private Double inputY;
+   private Double x;
+   private Double y;
+   private Double rotationSup;
+   private Boolean robotCentricSup;
+   private Double translationRightTrigger;
 
    private double robotSpeed = 2;
 
@@ -55,49 +58,57 @@ public class SwerveTeleop extends Command {
     * @param rotationSup     - the rotational velocity of the chassis
     * @param robotCentricSup - whether to drive as robot centric or not
     */
-   public SwerveTeleop(SwerveDrive swerve, DoubleSupplier x, DoubleSupplier y, DoubleSupplier rotationSup, DoubleSupplier translationRightTrigger,
-         BooleanSupplier robotCentricSup, boolean setAlliance) {
-      this.swerve = swerve;
-      // If doesn't want to set alliance
+   // public SwerveTeleop(SwerveDrive swerve, DoubleSupplier x, DoubleSupplier y, DoubleSupplier rotationSup, DoubleSupplier translationRightTrigger,
+   //       BooleanSupplier robotCentricSup, boolean setAlliance) {
+   //    this.swerve = swerve;
+   //    // If doesn't want to set alliance
 
-      this.setAlliance = setAlliance;
-      this.inputX = x;
-      this.inputY = y;
-      this.rotationSup = rotationSup;
-      this.robotCentricSup = robotCentricSup;
-      this.translationRightTrigger = translationRightTrigger;
-      this.joyUtil = new ArcadeJoystickUtil();
+   //    this.setAlliance = setAlliance;
+   //    this.inputX = x;
+   //    this.inputY = y;
+   //    this.rotationSup = rotationSup;
+   //    this.robotCentricSup = robotCentricSup;
+   //    this.translationRightTrigger = translationRightTrigger;
+   //    this.joyUtil = new ArcadeJoystickUtil();
+   //    this.addRequirements(swerve);
+   // }
+   public SwerveTeleop( SwerveDrive swerve, Joystick joy) {
+      this.swerve = swerve;
+      this.joystick = joy; 
       this.addRequirements(swerve);
    }
 
+   
    @Override
    public void execute() {
+      double x = this.joystick.getRawAxis(XboxController.Axis.kLeftY.value);
+      double y = this.joystick.getRawAxis(XboxController.Axis.kLeftX.value);
+      double rotation = this.joystick.getRawAxis(XboxController.Axis.kRightX.value);
+      double translationRightTrigger = this.joystick.getRawAxis(XboxController.Axis.kRightTrigger.value);
 
-      if (setAlliance) {
+      // if (setAlliance) {
 
-         var alliance = Robot.getAlliance();
+      //    var alliance = Robot.getAlliance();
 
-         if (alliance.isPresent()) {
-            // If red alliance
-            if (alliance.get() == DriverStation.Alliance.Red) {
-               yMult = -1.0;
-               xMult = -1.0;
-            } else {
-               yMult = 1.0;
-               xMult = 1.0;
-            }
-         }
+      //    if (alliance.isPresent()) {
+      //       // If red alliance
+      //       if (alliance.get() == DriverStation.Alliance.Red) {
+      //          yMult = -1.0;
+      //          xMult = -1.0;
+      //       } else {
+      //          yMult = 1.0;
+      //          xMult = 1.0;
+      //       }
+      //    }
 
-      }
+      // }
 
-      this.x = inputX;
-      this.y = inputY;
 
       // Get values of controls and apply deadband
-      double xVal = -this.x.getAsDouble(); // Flip for XBox support
-      double yVal = this.y.getAsDouble();
+      double xVal = -x; // Flip for XBox support
+      double yVal = y;
 
-      double rightTriggerVal = Math.abs(this.translationRightTrigger.getAsDouble());
+      double rightTriggerVal = Math.abs(this.translationRightTrigger);
 
       if (rightTriggerVal < 0.1) {
          rightTriggerVal = 0.1;
@@ -111,8 +122,8 @@ public class SwerveTeleop extends Command {
       xVal = MathUtil.applyDeadband(xVal, Constants.SwerveConstants.deadBand);
       yVal = MathUtil.applyDeadband(yVal, Constants.SwerveConstants.deadBand);
 
-      double rotationVal = this.rotationSup.getAsDouble();
-      rotationVal = MathUtil.applyDeadband(rotationVal, Constants.SwerveConstants.deadBand);
+   
+      double rotationVal = MathUtil.applyDeadband(rotation, Constants.SwerveConstants.deadBand);
 
       // Apply rate limiting to rotation
       rotationVal = this.rotationLimiter.calculate(rotationVal);
@@ -138,7 +149,7 @@ public class SwerveTeleop extends Command {
       // Drive swerve with values
       this.swerve.drive(new Translation2d(correctedX, correctedY),
             rotationVal * Constants.SwerveConstants.maxChassisAngularVelocity,
-            this.robotCentricSup.getAsBoolean(), false);
+            this.robotCentricSup, false);
    }
 
    // Called once the command ends or is interrupted.

@@ -20,7 +20,11 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 
 
+
 public class RobotContainer {
+
+
+  
 
   /*
    * TO THE FUTURE READERS/REVIEWERS OF THIS FILE:
@@ -47,6 +51,14 @@ public class RobotContainer {
   public final Pose2d startpose = new Pose2d(new Translation2d(0, 0), new Rotation2d());
 
   // ---------------------- END OF CONFIG SECTION --------------------------
+
+  private SwerveDrive swerveDriveTrain = new SwerveDrive(startpose, 
+  Constants.SwerveModuleIOConfig.module0,
+  Constants.SwerveModuleIOConfig.module1,
+  Constants.SwerveModuleIOConfig.module2,
+  Constants.SwerveModuleIOConfig.module3);
+
+  private final SwerveTeleop swerveTeleop = new SwerveTeleop(this.swerve, this.drivingXbox);
 
   // Xbox + an additional one for PC use
   private final Joystick drivingXbox = new Joystick(0);
@@ -80,12 +92,15 @@ public class RobotContainer {
 
 
   public RobotContainer() {
+    swerve.setDefaultCommand(swerveTeleop);
+
+    configureBindings();
 
     // Construct swerve subsystem with appropriate modules - DO NOT REMOVE THIS
     this.constructSwerve();
 
     // Create swerve commands - DO NOT REMOVE THIS
-    this.createSwerveCommands();
+    // this.createSwerveCommands();
 
     
     // Construct all other things
@@ -125,69 +140,70 @@ public class RobotContainer {
 
   }
 
-  private void createSwerveCommands() {
-
-    if (Constants.currentRobot.xboxEnabled) {
-      // Supply teleop command with joystick methods - USES LAMBDAS
-      teleop = new SwerveTeleop(this.swerve, () -> {
-        return -this.drivingXbox.getRawAxis(translationAxis);
-      }, () -> {
-        return -this.drivingXbox.getRawAxis(strafeAxis);
-      }, () -> {
-        return -this.drivingXbox.getRawAxis(rotationAxis);
-      }, () -> {
-        return this.drivingXbox.getRawAxis(XboxController.Axis.kRightTrigger.value);
-      }, () -> {
-
-        // Toggles between field centric (true) and robot centric (false)
-        if (this.drivingXbox.getRawButtonPressed(XboxController.Button.kX.value)) {
-          fieldCentricToggle = !fieldCentricToggle;
-
-          SmartDashboard.putBoolean("isFieldCentric", fieldCentricToggle);
-        }
-
-        return fieldCentricToggle;
-      }, Constants.currentRobot.allianceEnabled);
-
-    } else if (!Constants.currentRobot.xboxEnabled) {
-      // Supply teleop command with joystick methods - USES LAMBDAS
-      teleop = new SwerveTeleop(this.swerve, () -> {
-        return -this.drivingXbox.getX();
-      }, () -> {
-        return -this.drivingXbox.getY();
-      }, () -> {
-        return -this.simulationJoy.getRawAxis(0);
-      }, () -> {
-        return 0.0;
-      }, () -> {
-
-        // Toggles between field centric (true) and robot centric (false)
-        if (this.drivingXbox.getRawButtonPressed(1)) {
-          fieldCentricToggle = !fieldCentricToggle;
-        }
-
-        return fieldCentricToggle;
-      }, Constants.currentRobot.allianceEnabled);
-
-    }
-
-    crabDrive = new CrabDrive(this.swerve, () -> {
-      return -this.drivingXbox.getX();
-    }, () -> {
-      return -this.drivingXbox.getY();
-    });
-
-    allFour = new TestFourModules(swerve, drivingXbox);
-    
-    teleopCommandChooser.addOption("Regular Teleop", teleop);
-    teleopCommandChooser.addOption("Crab Teleop", crabDrive);
-    teleopCommandChooser.addOption("Module Test Command", allFour);
-    teleopCommandChooser.setDefaultOption("Regular Teleop", teleop);
-   
-    // autoPaths = new InitializeAutoPaths(swerve, shooter);
   
-    SmartDashboard.putData(teleopCommandChooser);
-  }
+  // private void createSwerveCommands() {
+
+  //   if (Constants.currentRobot.xboxEnabled) {
+  //     // Supply teleop command with joystick methods - USES LAMBDAS
+  //     teleop = new SwerveTeleop(this.swerve, () -> {
+  //       return -this.drivingXbox.getRawAxis(translationAxis);
+  //     }, () -> {
+  //       return -this.drivingXbox.getRawAxis(strafeAxis);
+  //     }, () -> {
+  //       return -this.drivingXbox.getRawAxis(rotationAxis);
+  //     }, () -> {
+  //       return this.drivingXbox.getRawAxis(XboxController.Axis.kRightTrigger.value);
+  //     }, () -> {
+
+  //       // Toggles between field centric (true) and robot centric (false)
+  //       if (this.drivingXbox.getRawButtonPressed(XboxController.Button.kX.value)) {
+  //         fieldCentricToggle = !fieldCentricToggle;
+
+  //         SmartDashboard.putBoolean("isFieldCentric", fieldCentricToggle);
+  //       }
+
+  //       return fieldCentricToggle;
+  //     }, Constants.currentRobot.allianceEnabled);
+
+  //   } else if (!Constants.currentRobot.xboxEnabled) {
+  //     // Supply teleop command with joystick methods - USES LAMBDAS
+  //     teleop = new SwerveTeleop(this.swerve, () -> {
+  //       return -this.drivingXbox.getX();
+  //     }, () -> {
+  //       return -this.drivingXbox.getY();
+  //     }, () -> {
+  //       return -this.simulationJoy.getRawAxis(0);
+  //     }, () -> {
+  //       return 0.0;
+  //     }, () -> {
+
+  //       // Toggles between field centric (true) and robot centric (false)
+  //       if (this.drivingXbox.getRawButtonPressed(1)) {
+  //         fieldCentricToggle = !fieldCentricToggle;
+  //       }
+
+  //       return fieldCentricToggle;
+  //     }, Constants.currentRobot.allianceEnabled);
+
+  //   }
+
+  //   crabDrive = new CrabDrive(this.swerve, () -> {
+  //     return -this.drivingXbox.getX();
+  //   }, () -> {
+  //     return -this.drivingXbox.getY();
+  //   });
+
+  //   allFour = new TestFourModules(swerve, drivingXbox);
+    
+  //   teleopCommandChooser.addOption("Regular Teleop", teleop);
+  //   teleopCommandChooser.addOption("Crab Teleop", crabDrive);
+  //   teleopCommandChooser.addOption("Module Test Command", allFour);
+  //   teleopCommandChooser.setDefaultOption("Regular Teleop", teleop);
+   
+  //   // autoPaths = new InitializeAutoPaths(swerve, shooter);
+  
+  //   SmartDashboard.putData(teleopCommandChooser);
+  // }
 
   private void configureBindings() {
   }
