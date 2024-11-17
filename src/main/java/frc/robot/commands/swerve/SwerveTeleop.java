@@ -9,22 +9,28 @@ import frc.util.lib.AsymmetricLimiter;
 import frc.util.lib.ArcadeJoystickUtil;
 import frc.robot.Robot;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController;
 
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
+
 public class SwerveTeleop extends Command {
    // Initialize empty swerve object
    private SwerveDrive swerve;
+   private final Joystick joystick;
+   private boolean robotCentric = false;
 
    // Create suppliers as object references
-   private DoubleSupplier inputX;
-   private DoubleSupplier inputY;
-   private DoubleSupplier x;
-   private DoubleSupplier y;
-   private DoubleSupplier rotationSup;
+   private double inputX;
+   private double inputY;
+   private double x;
+   private double y;
+   private double rotationSup;
    private BooleanSupplier robotCentricSup;
-   private DoubleSupplier translationRightTrigger;
+   private double translationRightTrigger;
 
    private double robotSpeed = 2;
 
@@ -55,7 +61,8 @@ public class SwerveTeleop extends Command {
     * @param rotationSup     - the rotational velocity of the chassis
     * @param robotCentricSup - whether to drive as robot centric or not
     */
-   public SwerveTeleop(SwerveDrive swerve, DoubleSupplier x, DoubleSupplier y, DoubleSupplier rotationSup, DoubleSupplier translationRightTrigger,
+
+   /*public SwerveTeleop(SwerveDrive swerve, DoubleSupplier x, DoubleSupplier y, DoubleSupplier rotationSup, DoubleSupplier translationRightTrigger,
          BooleanSupplier robotCentricSup, boolean setAlliance) {
       this.swerve = swerve;
       // If doesn't want to set alliance
@@ -68,10 +75,30 @@ public class SwerveTeleop extends Command {
       this.translationRightTrigger = translationRightTrigger;
       this.joyUtil = new ArcadeJoystickUtil();
       this.addRequirements(swerve);
+   }*/
+
+   public SwerveTeleop(SwerveDrive swerve, Joystick joy, boolean setAlliance){
+      this.swerve = swerve;
+      this.setAlliance = setAlliance;
+      this.joystick = joy;
+
+      this.joyUtil = new ArcadeJoystickUtil();
+      this.addRequirements(swerve);
+      
    }
+
 
    @Override
    public void execute() {
+
+      double x = this.joystick.getRawAxis(XboxController.Axis.kLeftY.value);
+      double y = this.joystick.getRawAxis(XboxController.Axis.kLeftX.value);
+      double rotation = -this.joystick.getRawAxis(XboxController.Axis.kRightTrigger.value);
+
+      double xVal = -x;
+      double yVal = y;
+
+      double rightTriggerVal = Math.abs(translationRightTrigger);
 
       if (setAlliance) {
 
@@ -94,10 +121,10 @@ public class SwerveTeleop extends Command {
       this.y = inputY;
 
       // Get values of controls and apply deadband
-      double xVal = -this.x.getAsDouble(); // Flip for XBox support
-      double yVal = this.y.getAsDouble();
+     // double xVal = -this.x; // Flip for XBox support
+      //double yVal = this.y;
 
-      double rightTriggerVal = Math.abs(this.translationRightTrigger.getAsDouble());
+      //double rightTriggerVal = Math.abs(this.translationRightTrigger);
 
       if (rightTriggerVal < 0.1) {
          rightTriggerVal = 0.1;
@@ -111,11 +138,11 @@ public class SwerveTeleop extends Command {
       xVal = MathUtil.applyDeadband(xVal, Constants.SwerveConstants.deadBand);
       yVal = MathUtil.applyDeadband(yVal, Constants.SwerveConstants.deadBand);
 
-      double rotationVal = this.rotationSup.getAsDouble();
-      rotationVal = MathUtil.applyDeadband(rotationVal, Constants.SwerveConstants.deadBand);
+
+      rotation = MathUtil.applyDeadband(rotation, Constants.SwerveConstants.deadBand);
 
       // Apply rate limiting to rotation
-      rotationVal = this.rotationLimiter.calculate(rotationVal);
+      rotation = this.rotationLimiter.calculate(rotation);
 
       double[] output = new double[2];
       if (Constants.currentRobot.xboxEnabled) {
@@ -137,7 +164,7 @@ public class SwerveTeleop extends Command {
 
       // Drive swerve with values
       this.swerve.drive(new Translation2d(correctedX, correctedY),
-            rotationVal * Constants.SwerveConstants.maxChassisAngularVelocity,
+            rotation * Constants.SwerveConstants.maxChassisAngularVelocity,
             this.robotCentricSup.getAsBoolean(), false);
    }
 

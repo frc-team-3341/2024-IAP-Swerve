@@ -55,11 +55,18 @@ public class RobotContainer {
   // Chooser for testing teleop commands
   private final SendableChooser<Command> teleopCommandChooser = new SendableChooser<>();
   
+  private SwerveDrive swerveDriveTrain = new SwerveDrive(startpose,
+    Constants.SwerveModuleIOConfig.module0,
+    Constants.SwerveModuleIOConfig.module1,
+    Constants.SwerveModuleIOConfig.module2,
+    Constants.SwerveModuleIOConfig.module3);
 
   // Define axises for using joystick
+  private final SwerveTeleop swerveTeleop = new SwerveTeleop(this.swerveDriveTrain, this.drivingXbox, Constants.currentRobot.allianceEnabled);
   private final int translationAxis = XboxController.Axis.kLeftY.value; // Axis ID: 1
   private final int strafeAxis = XboxController.Axis.kLeftX.value; // Axis ID: 0
   private final int rotationAxis = XboxController.Axis.kRightX.value; // Axis ID: 4
+
 
   // Creates array of swerve modules for use in SwerveDrive object - null in
   // context of code
@@ -74,22 +81,29 @@ public class RobotContainer {
   // Empty CrabDrive object
   private CrabDrive crabDrive;
 
+  
 
   // Field centric toggle - true for field centric, false for robot centric
   private boolean fieldCentricToggle = true;
 
-
+  /** The container for the robot. Contains sybsystems, OI devicies, and commands. */
   public RobotContainer() {
+    swerve.setDefaultCommand(swerveTeleop);
+    // Configure the trigger bindings
+    configureBindings();
 
     // Construct swerve subsystem with appropriate modules - DO NOT REMOVE THIS
-    this.constructSwerve();
+   // this.constructSwerve();
 
     // Create swerve commands - DO NOT REMOVE THIS
-    this.createSwerveCommands();
+    //this.createSwerveCommands();
 
     
     // Construct all other things
-    this.configureBindings();
+    //this.configureBindings();
+
+    
+    
 
 
   }
@@ -125,7 +139,8 @@ public class RobotContainer {
 
   }
 
-  private void createSwerveCommands() {
+
+  /*private void createSwerveCommands() {
 
     if (Constants.currentRobot.xboxEnabled) {
       // Supply teleop command with joystick methods - USES LAMBDAS
@@ -169,7 +184,7 @@ public class RobotContainer {
         return fieldCentricToggle;
       }, Constants.currentRobot.allianceEnabled);
 
-    }
+    
 
     crabDrive = new CrabDrive(this.swerve, () -> {
       return -this.drivingXbox.getX();
@@ -187,7 +202,7 @@ public class RobotContainer {
     // autoPaths = new InitializeAutoPaths(swerve, shooter);
   
     SmartDashboard.putData(teleopCommandChooser);
-  }
+  }*/
 
   private void configureBindings() {
   }
