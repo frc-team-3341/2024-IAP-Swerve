@@ -50,10 +50,10 @@ public class RobotContainer {
 
   // Xbox + an additional one for PC use
   private final Joystick drivingXbox = new Joystick(0);
-  private final Joystick simulationJoy = new Joystick(1);
+  //private final Joystick simulationJoy = new Joystick(1);
 
   // Chooser for testing teleop commands
-  private final SendableChooser<Command> teleopCommandChooser = new SendableChooser<>();
+  //private final SendableChooser<Command> teleopCommandChooser = new SendableChooser<>();
   
   private SwerveDrive swerveDriveTrain = new SwerveDrive(startpose,
     Constants.SwerveModuleIOConfig.module0,
@@ -63,23 +63,22 @@ public class RobotContainer {
 
   // Define axises for using joystick
   private final SwerveTeleop swerveTeleop = new SwerveTeleop(this.swerveDriveTrain, this.drivingXbox, Constants.currentRobot.allianceEnabled);
-  private final int translationAxis = XboxController.Axis.kLeftY.value; // Axis ID: 1
-  private final int strafeAxis = XboxController.Axis.kLeftX.value; // Axis ID: 0
-  private final int rotationAxis = XboxController.Axis.kRightX.value; // Axis ID: 4
+  //private final int translationAxis = XboxController.Axis.kLeftY.value; // Axis ID: 1
+  //private final int strafeAxis = XboxController.Axis.kLeftX.value; // Axis ID: 0
+  //private final int rotationAxis = XboxController.Axis.kRightX.value; // Axis ID: 4
 
 
   // Creates array of swerve modules for use in SwerveDrive object - null in
   // context of code
   SwerveModuleIO[] swerveMods = new SwerveModuleIO[4];
   // Empty SwerveDrive object
-  private SwerveDrive swerve;
   // Empty testing commands (not used if not needed)
-  private TestFourModules allFour;
+  //private TestFourModules allFour;
   // Empty Auto object
   // Empty SwerveTeleop object
-  private SwerveTeleop teleop;
+  //private SwerveTeleop teleop;
   // Empty CrabDrive object
-  private CrabDrive crabDrive;
+  //private CrabDrive crabDrive;
 
   
 
@@ -88,7 +87,7 @@ public class RobotContainer {
 
   /** The container for the robot. Contains sybsystems, OI devicies, and commands. */
   public RobotContainer() {
-    swerve.setDefaultCommand(swerveTeleop);
+    swerveDriveTrain.setDefaultCommand(swerveTeleop);
     // Configure the trigger bindings
     configureBindings();
 
@@ -134,7 +133,7 @@ public class RobotContainer {
 
     }
 
-    this.swerve = new SwerveDrive(startpose, this.swerveMods[0], this.swerveMods[1], this.swerveMods[2],
+    this.swerveDriveTrain = new SwerveDrive(startpose, this.swerveMods[0], this.swerveMods[1], this.swerveMods[2],
         this.swerveMods[3]);
 
   }
@@ -214,7 +213,7 @@ public class RobotContainer {
 
 
   public void initCommandInTeleop() {
-    swerve.setDefaultCommand(teleopCommandChooser.getSelected());
+    swerveDriveTrain.setDefaultCommand(swerveTeleop);
   }
 
   /**

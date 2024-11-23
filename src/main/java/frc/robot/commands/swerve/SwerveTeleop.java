@@ -13,23 +13,24 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 
 import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier; // will be used therefore do not delete
+import java.util.function.DoubleSupplier; // will be used
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain; // will be used therefore do not delete
+import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain; // will be used
 
 public class SwerveTeleop extends Command {
+
    // Initialize empty swerve object
    private SwerveDrive swerve;
    private final Joystick joystick;
-   private boolean robotCentric = false;
+   //private boolean robotCentric = false;
 
    // Create suppliers as object references
    private double inputX;
    private double inputY;
    private double x;
    private double y;
-   private double rotationSup;
-   private BooleanSupplier robotCentricSup;
+   //private double rotationSup;
+   private boolean robotCentricSup = false;
    private double translationRightTrigger;
 
    private double robotSpeed = 2;
@@ -162,7 +163,7 @@ public class SwerveTeleop extends Command {
       // Drive swerve with values
       this.swerve.drive(new Translation2d(correctedX, correctedY),
             rotation * Constants.SwerveConstants.maxChassisAngularVelocity,
-            this.robotCentricSup.getAsBoolean(), false);
+            this.robotCentricSup, false);
    }
 
    // Called once the command ends or is interrupted.
