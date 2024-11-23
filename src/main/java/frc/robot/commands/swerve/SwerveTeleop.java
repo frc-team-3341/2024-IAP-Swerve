@@ -13,9 +13,9 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 
 import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
+import java.util.function.DoubleSupplier; // will be used therefore do not delete
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain; // will be used therefore do not delete
 
 public class SwerveTeleop extends Command {
    // Initialize empty swerve object
@@ -45,9 +45,6 @@ public class SwerveTeleop extends Command {
    // Positive limit ensures smooth acceleration (1000 * dt * dControl)
    // Negative limit ensures an ability to stop (0 * dt * dControl)
    private AsymmetricLimiter 
-   
-   
-   
    
    translationLimiter = new AsymmetricLimiter(5.0D, 1000.0D);
    private AsymmetricLimiter rotationLimiter = new AsymmetricLimiter(10.0D, 10.0D);
@@ -177,4 +174,5 @@ public class SwerveTeleop extends Command {
       // PLEASE SET THIS FOR SAFETY!!!
       this.swerve.stopMotors();
    }
+   
 }

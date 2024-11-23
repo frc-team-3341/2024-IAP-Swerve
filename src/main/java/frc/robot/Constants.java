@@ -34,7 +34,7 @@ public final class Constants {
       static SwerveModuleIOSparkMax module2 = new SwerveModuleIOSparkMax(2, 5, 6, 11, 108.11, false);
       static SwerveModuleIOSparkMax module3 = new SwerveModuleIOSparkMax(3, 7, 8, 12, 82.62, true);
     }
-
+    
     public static final class SwerveConstants {
         // These can be safely adjusted without adjusting discrete
         // Some fudge factor is needed for safety while translating + rotating

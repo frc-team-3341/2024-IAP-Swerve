@@ -280,8 +280,6 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
             SmartDashboard.putNumber("Wheel Displacement #" + this.num, getPosition().distanceMeters);
         
         }
-    
-
           
     }
 
@@ -289,4 +287,5 @@ public class SwerveModuleIOSparkMax implements SwerveModuleIO {
         return num;
     }
 
+    
 }

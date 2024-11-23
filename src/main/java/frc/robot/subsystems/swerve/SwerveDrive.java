@@ -142,9 +142,6 @@ public class SwerveDrive extends SubsystemBase {
          this.moduleIO[i].setDesiredState(swerveModuleStates[i]);
       }
 
-      
-      
-
    }
 
    /**
@@ -317,7 +314,6 @@ public class SwerveDrive extends SubsystemBase {
          navx.reset();
         // Pose2d p = new Pose2d(0, 0, new Rotation2d(Units.degreesToRadians(15)));
         // offsetNavx = getRotation().minus(p.getRotation()).plus(offsetNavx);
-      
       });
    }
 
