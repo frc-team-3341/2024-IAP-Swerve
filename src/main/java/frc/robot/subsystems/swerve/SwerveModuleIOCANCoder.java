@@ -4,15 +4,16 @@
 
 package frc.robot.subsystems.swerve;
 
-import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.AbsoluteSensorRange;
+import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.SensorInitializationStrategy;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkPIDController;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.revrobotics.CANSparkBase.IdleMode;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.CANSparkLowLevel.PeriodicFrame;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkPIDController;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -23,6 +24,7 @@ import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants;
 import frc.robot.Constants.ModuleConstants;
+import frc.robot.commands.swerve.SwerveTeleop;
 
 /*
  * WARNING: MOST CANCODER PHOENIX v5 CLASSES + METHODS HAVE BEEN DEPRECATED. PLEASE FIX :).
@@ -48,6 +50,11 @@ public class SwerveModuleIOCANCoder implements SwerveModuleIO {
     // Variables to store voltages of motors - REV stuff doesn't like getters
     private double driveVolts = 0.0;
     private double turnVolts = 0.0;
+
+    SwerveModuleIO[] swerveMods = new SwerveModuleIO[4];
+    
+
+    
 
     double offset;
 
