@@ -19,13 +19,13 @@ public class SwerveTeleop extends Command {
    
 
    // Create suppliers as object references
-   private double inputX;
-   private double inputY;
-   private double x;
-   private double y;
+   // private double inputX;
+   // private double inputY;
+   // private double x;
+   // private double y;
    // private double rotationSup;
-   private boolean robotCentricSup;
-   private double translationRightTrigger;
+   private boolean robotCentricSup = false;
+   // private double translationRightTrigger;
 
    private double robotSpeed = 2;
 
@@ -53,7 +53,7 @@ public class SwerveTeleop extends Command {
    /**
     * Creates a SwerveTeleop command, for controlling a Swerve bot.
     * 
-    * @param swerve          - the Swerve subsystem
+    *          - the Swerve subsystem
     * @param x               - the translational/x component of velocity (across field)
     * @param y               - the strafe/y component of velocity (up and down on field)
     * @param rotationSup     - the rotational velocity of the chassis
@@ -76,6 +76,7 @@ public class SwerveTeleop extends Command {
    public SwerveTeleop(SwerveDrive swerve, Joystick joy){
       this.swerve = swerve;
       this.joystick = joy;
+      this.joyUtil = new ArcadeJoystickUtil();
       this.addRequirements(swerve);
    }
 
@@ -139,18 +140,19 @@ public class SwerveTeleop extends Command {
          Constants.SwerveConstants.maxChassisTranslationalSpeed);
       }
 
-      double newHypot = robotSpeed*translationLimiter.calculate(output[0]);
+      double newHypot = robotSpeed * translationLimiter.calculate(output[0]);
 
       // Deadband should be applied after calculation of polar coordinates
       newHypot = MathUtil.applyDeadband(newHypot, Constants.SwerveConstants.deadBand);
 
+      // Takes the controller input and converts it to polar coordinates (Feed an angle (degrees) and with a magnitude)
       double correctedX = rightTriggerVal * xMult * newHypot * Math.cos(output[1]);
       double correctedY =  rightTriggerVal * yMult * newHypot * Math.sin(output[1]);
 
       // Drive swerve with values
       this.swerve.drive(new Translation2d(correctedX, correctedY),
             rotationVal * Constants.SwerveConstants.maxChassisAngularVelocity,
-            robotCentricSup, false);
+            this.robotCentricSup, false);
    }
 
    // Called once the command ends or is interrupted.

@@ -279,7 +279,7 @@ public class SwerveDrive extends SubsystemBase {
       poseEstimator.resetPosition(pose.getRotation(), modulePositions, pose);
       offsetNavx = pose.getRotation().minus(navx.getRotation2d());
 
-      ShuffleboardTab tab = Shuffleboard.getTab("Heading Testing");
+      // ShuffleboardTab tab = Shuffleboard.getTab("Heading Testing");
       Shuffleboard.selectTab("Heading Testing");
       SmartDashboard.putNumber("offsetNavx", offsetNavx.getDegrees());
       SmartDashboard.putNumber("pose.getRotation()", pose.getRotation().getDegrees());

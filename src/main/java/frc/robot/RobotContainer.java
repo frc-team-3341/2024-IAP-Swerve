@@ -3,20 +3,11 @@ package frc.robot;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DataLogManager;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.commands.swerve.CrabDrive;
 import frc.robot.commands.swerve.SwerveTeleop;
-import frc.robot.commands.swerve.TestFourModules;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.swerve.SwerveModuleIO;
-import frc.robot.subsystems.swerve.SwerveModuleIOSim;
-import frc.robot.subsystems.swerve.SwerveModuleIOSparkMax;
 
 
 public class RobotContainer {
@@ -48,9 +39,9 @@ public class RobotContainer {
   // ---------------------- END OF CONFIG SECTION --------------------------
 
   // Xbox + an additional one for PC use
-  // private final Joystick drivingXbox = new Joystick(0);
+  private final Joystick drivingXbox = new Joystick(0);
   // private final Joystick simulationJoy = new Joystick(1);
-  private SwerveDrive swerve;
+  
 
   // Chooser for testing teleop commands
   // private final SendableChooser<Command> teleopCommandChooser = new SendableChooser<>();
@@ -63,7 +54,7 @@ public class RobotContainer {
 
   // Creates array of swerve modules for use in SwerveDrive object - null in
   // context of code
-  SwerveModuleIO[] swerveMods = new SwerveModuleIO[4];
+  // SwerveModuleIO[] swerveMods = new SwerveModuleIO[4];
   // Empty SwerveDrive object
   // Empty testing commands (not used if not needed)
   // private TestFourModules allFour;
@@ -71,13 +62,12 @@ public class RobotContainer {
   // Empty SwerveTeleop object
   // Empty CrabDrive object
   // private CrabDrive crabDrive;
-  private Joystick joy;
 
   private final SwerveDrive SwerveDrive = new SwerveDrive(startpose, Constants.SwerveModuleIOConfig.module0,
     Constants.SwerveModuleIOConfig.module1, 
     Constants.SwerveModuleIOConfig.module2, 
     Constants.SwerveModuleIOConfig.module3);
-  private final SwerveTeleop swerveTeleopCMD = new SwerveTeleop(SwerveDrive, joy);
+  private final SwerveTeleop swerveTeleopCMD = new SwerveTeleop(SwerveDrive, this.drivingXbox);
 
 
   // Field centric toggle - true for field centric, false for robot centric
@@ -205,7 +195,7 @@ public class RobotContainer {
 
 
   public void initCommandInTeleop() {
-    swerve.setDefaultCommand(swerveTeleopCMD);
+    SwerveDrive.setDefaultCommand(swerveTeleopCMD);
   }
 
   /**
