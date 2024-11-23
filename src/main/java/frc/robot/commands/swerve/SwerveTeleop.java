@@ -91,7 +91,7 @@ public class SwerveTeleop extends Command {
 
       double x = this.joystick.getRawAxis(XboxController.Axis.kLeftY.value);
       double y = this.joystick.getRawAxis(XboxController.Axis.kLeftX.value);
-      double rotation = -this.joystick.getRawAxis(XboxController.Axis.kRightTrigger.value);
+      double rotation = -this.joystick.getRawAxis(XboxController.Axis.kRightX.value);
 
       double xVal = -x;
       double yVal = y;
