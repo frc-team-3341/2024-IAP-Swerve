@@ -5,6 +5,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.commands.swerve.SwerveAutonomousCMD;
 import frc.robot.commands.swerve.SwerveTeleop;
 import frc.robot.subsystems.swerve.SwerveDrive;
 import frc.robot.subsystems.swerve.SwerveModuleIO;
@@ -69,6 +70,7 @@ public class RobotContainer {
     Constants.SwerveModuleIOConfig.module3);
   private final SwerveTeleop swerveTeleopCMD = new SwerveTeleop(SwerveDrive, this.drivingXbox);
 
+  private final SwerveAutonomousCMD swerveAuto = new SwerveAutonomousCMD(this.SwerveDrive, Constants.currentRobot.allianceEnabled);
 
   // Field centric toggle - true for field centric, false for robot centric
   // private boolean fieldCentricToggle = true;
@@ -189,7 +191,7 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return null;
+    return swerveAuto;
     
   }
 
