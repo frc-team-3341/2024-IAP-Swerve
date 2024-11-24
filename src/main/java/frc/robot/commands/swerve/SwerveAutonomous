@@ -1,0 +1,19 @@
+pakage frc.robot.commands.swerve;
+
+import edu.wpi.first.wpilibj2.command.Command;
+
+public class SwerveAutonomousCMD extends Command {
+
+    private final SwerveDriveTrain swerveDriveTrain;
+
+    public SwerveAutonomousCMD(SwerveDriveTrain drivetrain, boolean setAlliance){
+        this.swerveDriveTrain = driveTrain;
+        this.addRequirements(this.swerveDriveTrain);
+    }
+
+    @Override
+    public void execute(){
+
+    }
+
+}
