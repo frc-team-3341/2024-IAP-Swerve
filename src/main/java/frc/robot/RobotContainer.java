@@ -67,6 +67,7 @@ public class RobotContainer {
   //private final int strafeAxis = XboxController.Axis.kLeftX.value; // Axis ID: 0
   //private final int rotationAxis = XboxController.Axis.kRightX.value; // Axis ID: 4
 
+  private final SwerveAutonomousCMD swerveAuto = new SwerveAutonomousCMD (this.SwerveDriveTrain, this.currentRobot)
 
   // Creates array of swerve modules for use in SwerveDrive object - null in
   // context of code
@@ -204,9 +205,10 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return null;
+    return swerveAuto;
     
   }
+
 
 
   public void initCommandInTeleop() {
