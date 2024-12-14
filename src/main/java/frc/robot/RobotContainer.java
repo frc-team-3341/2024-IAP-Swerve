@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 
 import frc.robot.commands.swerve.CrabDrive;
+import frc.robot.commands.swerve.SwerveAutonomousCMD;
 import frc.robot.commands.swerve.SwerveTeleop;
 import frc.robot.commands.swerve.TestFourModules;
 import frc.robot.subsystems.swerve.SwerveDrive;
@@ -67,7 +68,7 @@ public class RobotContainer {
   //private final int strafeAxis = XboxController.Axis.kLeftX.value; // Axis ID: 0
   //private final int rotationAxis = XboxController.Axis.kRightX.value; // Axis ID: 4
 
-  private final SwerveAutonomousCMD swerveAuto = new SwerveAutonomousCMD (this.SwerveDriveTrain, this.currentRobot)
+  private final SwerveAutonomousCMD swerveAuto = new SwerveAutonomousCMD (this.swerveDriveTrain, Constants.currentRobot.allianceEnabled);
 
   // Creates array of swerve modules for use in SwerveDrive object - null in
   // context of code

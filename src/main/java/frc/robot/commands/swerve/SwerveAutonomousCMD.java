@@ -1,17 +1,17 @@
-pakage frc.robot.commands.swerve;
+package frc.robot.commands.swerve;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.swerve.SwerveDriveTrain;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.swerve.SwerveDrive;
 
 public class SwerveAutonomousCMD extends Command {
 
-    private final SwerveDriveTrain swerveDriveTrain;
+    private final SwerveDrive swerveDriveTrain;
 
-    public SwerveAutonomousCMD(SwerveDriveTrain drivetrain, boolean setAlliance){
-        this.swerveDriveTrain = driveTrain;
+    public SwerveAutonomousCMD(SwerveDrive drivetrain, boolean setAlliance){
+        this.swerveDriveTrain = drivetrain;
         this.addRequirements(this.swerveDriveTrain);
     }
 
@@ -24,7 +24,7 @@ public class SwerveAutonomousCMD extends Command {
         SmartDashboard.putNumber("pose.getRotation().degrees", pos.getRotation().getDegrees());
         SmartDashboard.putNumber("translation.getX", pos.getTranslation().getX());
         SmartDashboard.putNumber("translation.getY", pos.getTranslation().getY());
-        SmartDashboard.putNumber(".getTraslation().getAngles().getDegrees()", pos.getTraslation().getAngles().getDegrees());
+        SmartDashboard.putNumber(".getTraslation().getAngles().getDegrees()", pos.getTranslation().getAngle().getDegrees());
     }
 
 
